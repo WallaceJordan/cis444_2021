@@ -4,30 +4,48 @@
         <!-- head definitions go here -->
 	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	<style>
+	body {
+		text-align:center;
+		font-family: "Courier New", "Lucida Console", monospace;
+		background-image: url('https://i.pinimg.com/originals/0d/9b/24/0d9b24189f42fb3f2563ef854b41ab0f.png');
+		background-size: cover;
+		overflow: hidden;
+		-webkit-backface-visibility: hidden;
+		-webkit-perspective: 1000;
+		-webkit-transform: translate3d(0,0,0);
+	}
 	#mytime {
 		text-decoration: underline purple;
+		animation: showup 10s;
 	}
 	#bestcolor {
 		color: purple;
+	}
+
+	@keyframes showup {
+		0% {opacity:0;}
+		20% {opacity:1;}
+		80% {opacity:1;}
+		100% {opacity:1;}
 	}
 	</style>
 	</head>
 	<!--style="background-image: url('{{img_url}}/bully.gif')"-->
 	<body>
 		<script>
-			setInterval( function(){ $('#mytime').html( "Your Time is " + new Date());}, 0);
-			setInterval( function(){ $('#mewithhomework').html( "^ This is a visual representation of what is going on in my head when I work on homework");}, 1500);
-			setInterval( function(){ $('#whyunderline').html( "You might be asking yourself, \"Why is the time underlined in purple?\"");}, 5000);
-			setInterval( function(){ $('#bestcolor').html( "The answer is quite simple. Purple is the best color :)");}, 8000);
-			setInterval( function(){ $('#rating');}, 11000);
+			setInterval( function(){ $('#mytime').html( "Server Time is {{server_time}}");}, 0);
+			setInterval( function(){ $('#mewithhomework').html( "^ This is a visual representation of what is going on in my head when I work on homework");}, 4000);
+			setInterval( function(){ $('#whyunderline').html( "You might be asking yourself, \"Why is the time underlined in purple?\"");}, 8000);
+			setInterval( function(){ $('#bestcolor').html( "The answer is quite simple. Purple is the best color :)");}, 13000);
+			setInterval( function(){ $('#rating');}, 16000);
 			
 		</script>
 		<h1 id="mytime"></h1>
 		<img src="https://c.tenor.com/-kZOB16tELEAAAAC/this-is-fine-fire.gif" alt="funny GIF" width="50%">
-		<h2 id="mewithhomework"</h2>
+		<h3 id="mewithhomework"></h3>
 		<h3 id="whyunderline"></h3>
 		<h3 id="bestcolor"></h3>
-		<label for="rating">On a scale of 1-10, how happy did this make you?: </label>
+		<label for="rating" style="font-size:20px">On a scale of 1-10, how happy did this make you?: </label>
 		<select name="rating" id="rating">
 			<option value="1">1</option>
 			<option value="2">2</option>
