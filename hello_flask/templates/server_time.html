@@ -18,6 +18,10 @@
 		text-decoration: underline purple;
 		animation: showup 10s;
 	}
+	#servertime {
+		text-decoration: underline purple;
+		animation: showup 10s;
+	}
 	#bestcolor {
 		color: purple;
 	}
@@ -33,13 +37,15 @@
 	<!--style="background-image: url('{{img_url}}/bully.gif')"-->
 	<body>
 		<script>
-			setInterval( function(){ $('#mytime').html( "Server Time is {{server_time}}");}, 0);
+			setInterval( function(){ $('#servertime').html( "Server Time is {{server_time}}");}, 0);
+			setInterval( function(){ $('#mytime').html( "Client Time is " + new Date());}, 0);
 			setInterval( function(){ $('#mewithhomework').html( "^ This is a visual representation of what is going on in my head when I work on homework");}, 4000);
 			setInterval( function(){ $('#whyunderline').html( "You might be asking yourself, \"Why is the time underlined in purple?\"");}, 8000);
 			setInterval( function(){ $('#bestcolor').html( "The answer is quite simple. Purple is the best color :)");}, 13000);
 			setInterval( function(){ $('#rating');}, 16000);
 			
 		</script>
+		<h1 id="servertime"></h1>
 		<h1 id="mytime"></h1>
 		<img src="https://c.tenor.com/-kZOB16tELEAAAAC/this-is-fine-fire.gif" alt="funny GIF" width="50%">
 		<h3 id="mewithhomework"></h3>
