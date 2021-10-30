@@ -18,13 +18,12 @@
         <h2>this text</h2>
     
         <script> 
-		setInterval(function(){
-			$.post("/auth", { "username":"hello", "password":"1234"}, 
-				function(data, textStatus) {
-					console.log(data);
-					$('#mydiv').html(data.data['password']);
-				}, "json");
-		}, 500);
+		$.post("/auth", 
+			{ "username":"hello", "password":"1234"}, 
+			function(data, textStatus) {
+				console.log(data);
+				$('#mydiv').html(data.data['password']);
+			}, "json");
 
 
 
