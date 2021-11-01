@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request
 from flask_json import FlaskJSON, JsonError, json_response, as_json, jsonify
 import jwt
+import json
 
 import datetime
 import bcrypt
@@ -40,7 +41,6 @@ def assignment3():
 
 @app.route('/login', methods=["POST"]) #endpoint
 def login():
-    print("hi")
     cur = global_db_con.cursor()
     try:
         cur.execute("select username, password from users where username = '" + request.form["username"] + "';")
@@ -68,26 +68,34 @@ def login():
             print("Incorrect password.")
             return json_response(data={"message":"Incorrect password."}, status=404)
 
+@app.route('/bookList', methods=["POST"]) #endpoint
+def bookList():
+    if ValidateToken(request.form["jwt"]):
+        cur = global_db_con.cursor()
+        try:
+            cur.execute("select bookname, price from books;")
+        except:
+            return json_response(data={"message": "Error occured while reading from database."}, status=500)
 
-#@app.route('/login', methods=['POST']) #endpoint
-#def login():
-#    user_name = request.form['username']
-#    print(f"username: {user_name}")
-#    password = request.form['password']
-#    print(f"password: {password}")
-#    cur = global_db_con.cursor()
-#    cur.execute(f"select * from users where username = '{user_name}';")
-#    namecheck = cur.fetchall()
-#    print(namecheck)
-#    dbpw = namecheck[0][2]
-#    salted = bcrypt.hashpw( bytes(password,  'utf-8' ) , bcrypt.gensalt(12))
-#    print(bcrypt.checkpw(bytes(dbpw,'utf-8'), salted ))
-    #print(salted)
-    #print(namecheck)
-#    JWT_Token = jwt.encode({"username" : user_name, "password" : password} , JWT_SECRET, algorithm="HS256")
-#    print(jwt.decode(JWT_Token, JWT_SECRET, algorithms=["HS256"]))
-#    return json_response(jwt=JWT_Token)
-    #return json_response(data=request.form)
+        count = 0
+        message = '{"books":['
+        while 1:
+            row = cur.fetchone()
+            if row is None:
+                break
+            else:
+                if count > 0:
+                    message += ","
+                message += '{"bookname":"' + row[0] + '","price":"' + str(row[1]) + "\"}"
+                count += 1
+        message += "]}"
+
+        print("Valid user. Sending list of books.")
+        return json_response(data=json.loads(message))
+    else:
+        print("Invalid token. Sending error message.")
+        return json_response(data={"message": "User is not logged in."}, status=404)
+
 @app.route("/logout") #endpoint
 def logout():
     global JWT_Token
