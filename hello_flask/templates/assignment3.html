@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    	</head>
+    	<body>
+		<div id="jwt"></div>
+
+		<script>
+			var token;
+
+			async function check_form(){
+				//var text = document.getElementById("form_id").innerHTML.toLowerCase();
+				//var action = (text == "log in") ? "login" : "signup";
+
+				//console.log(text);
+				//console.log(action);
+
+				console.log("before username check");
+				if ($("#username").val().length == 0) {
+					alert("Please enter a username to login.");
+					return false;
+				}
+				if ($("#password").val().length == 0) {
+					alert("Please enter a password to login.");
+					return false;
+				}
+				console.log("after password check");
+				
+				console.log(document.getElementById("username").value);
+				console.log($("#password").val());
+				const postResponse = await $.post("/login", { "username":$("#username").val(), "password":$("#password").val() }, "json");
+				//console.log(postResponse.status);
+
+				if (postResponse.status == 200) {
+					token = await postResponse.data;
+					bookList();
+					$("#login").hide();
+					$("#books").show();
+				}
+				else {
+					alert(postResponse.data.message);
+				}
+				document.getElementById("username").value = "";
+				document.getElementById("password").value = "";
+				return true;
+			}
+
+			async function bookList(){
+				console.log("reached booklist");
+				const getResponse = await $.post("/bookList", {"jwt": token.jwt}, "json");
+				console.log(getResponse.data.books);
+				for (i = 0; i < getResponse.data.books.length; i++) {
+					var nameofbook = getResponse.data.books[i].bookname;
+					var bookValue = nameofbook.replace(/\s+/g, '');
+					var bookprice = getResponse.data.books[i].price;
+					console.log(bookValue);
+					$('#booklist').append('<option value=' + bookValue +'>' + nameofbook + ' ' + bookprice + '</option>');
+				}
+			}
+
+			async function purchaseBook(bookname){
+				console.log(bookname);
+				const postResponse = await $.post("/purchaseBook", {"jwt":token.jwt, "book_id": bookname}, "json");
+				console.log(postResponse.data);
+				alert(postResponse.data.message);
+			}
+		</script>
+            	<div id="login">
+  			<label for="username">Username:</label><br>
+  				<input type="text" id="username" name="username" value="jordan"><br>
+  			<label for="password">Password:</label><br>
+  				<input type="password" id="password" name="password" value="topsecret"><br><br>
+  			<input type="submit" value="Login" onclick="return check_form();">
+		</div>
+
+	    	<div id="books" style="display:none">
+		    	<h1 id="buy_books">Select book to buy</h1>
+		    	<select name="booklist" id="booklist">
+  		    	</select>
+			<input type="submit" value="Purchase" onclick="purchaseBook(booklist.value);">
+		</div>
+	</body>
+</html>
