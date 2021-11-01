@@ -48,16 +48,16 @@ def login():
         return json_response(data={"message":"Error while reading from database."}, status=500)
 
     row =cur.fetchone()
-    print(row)
+    # print(row)
 
     if row is None:
         print("Username '" + request.form["username"] + "' does not exist.")
         return json_response(data={"message":("Username '" + request.form["username"] + "' does not exist.")}, status=404)
     else:
-        print("made it to bcrypt")
+        # print("made it to bcrypt")
         salted = bcrypt.hashpw(bytes(request.form["password"],  'utf-8' ) , bcrypt.gensalt(12))
-        print(salted)
-        print(bcrypt.checkpw(bytes(row[1], "utf-8"), salted))
+        # print(salted)
+        # print(bcrypt.checkpw(bytes(row[1], "utf-8"), salted))
         if bcrypt.checkpw(bytes(row[1], "utf-8"), salted):
             print(f"'{row[0]}' has logged in.")
             global JWT_Token
@@ -96,62 +96,26 @@ def bookList():
         print("Invalid token. Sending error message.")
         return json_response(data={"message": "User is not logged in."}, status=404)
 
-@app.route("/logout") #endpoint
-def logout():
-    global JWT_Token
-    JWT_Token = None
-    print("Logged out.")
-    return json_response(data={"message": "Logged out."})
-
-@app.route('/buy') #endpoint
-def buy():
-    return 'Buy'
-
-@app.route('/hello') #endpoint
-def hello():
-    return render_template('hello.html',img_url=IMGS_URL[CUR_ENV] ) 
-
-@app.route('/back',  methods=['GET']) #endpoint
-def back():
-    return render_template('backatu.html',input_from_browser=request.args.get('usay', default = "nothing", type = str) )
-
-@app.route('/backp',  methods=['POST']) #endpoint
-def backp():
-    print(request.form)
-    salted = bcrypt.hashpw( bytes(request.form['fname'],  'utf-8' ) , bcrypt.gensalt(10))
-    print(salted)
-
-    print(  bcrypt.checkpw(  bytes(request.form['fname'],  'utf-8' )  , salted ))
-
-    return render_template('backatu.html',input_from_browser= str(request.form) )
+@app.route("/purchaseBook", methods=["POST"])
+def purchaseBook():
+    decodedJWT = jwt.decode( request.form["jwt"], JWT_SECRET, algorithms=["HS256"])
+    print(decodedJWT["username"])
+    print(str(request.form["book_id"]))
+    print(str(datetime.datetime.now()))
+    cur = global_db_con.cursor()
+    try:
+        print("insert into purchases (username, purchase, created_on) values ('" +     str(decodedJWT["username"]) + "','" + str(request.form["book_id"]) + "','" + str(datetime    .datetime.now()) + "'); commit;")
+        cur.execute("insert into purchases (username, purchase, created_on) values ('" + str(decodedJWT["username"]) + "','" + str(request.form["book_id"]) + "','" + str(datetime.datetime.now()) + "'); commit;")
+        #global_db_con.commit()
+        print("Purchase successful!")
+        return json_response(data={"message":"Book purchased successfully!"}, status=200)
+    except:
+        return json_response(data={"message":"Error occured while writing to purchases."}, status=500)
 
 @app.route('/auth',  methods=['POST']) #endpoint
 def auth():
         print(request.form)
         return json_response(data=request.form)
-
-@app.route('/signup', methods=['POST']) #endpoint
-def signup():
-    user_name = request.form['username']
-    password = request.form['password']
-    cur = global_db_con.cursor()
-    cur.execute(f"select * from users where userID = '{user_name}';")
-    namecheck = cur.fetchone()
-    if nameCheck == None:
-        salted = bcrypt.hashpw(bytes(request.form['password'], 'utf-8'), bcrypt.gensalt(12))
-        decryptSalt = salted.decode('utf-8')
-        print(decryptSalt)
-        cut.execute(f"insert into users (username, password) values ('{user_name}', '{decryptSalt}');")
-        global_db_con.commit()
-        token = JWT_Token(user_name)
-        return jsonify(token)
-    else:
-        print("username already exists")
-        return make_response(
-                'Username already exists',
-                401,
-                {'WWW-Authenticate' : 'Basic realm ="User does not exist!"'})
-
 
 #Assigment 2
 @app.route('/ss1') #endpoint
