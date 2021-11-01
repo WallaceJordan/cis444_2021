@@ -17,13 +17,15 @@
 
         <h2>this text</h2>
     
-        <script> 
+        <script>
+		setInterval(function(){
 		$.post("/auth", 
 			{ "username":"hello", "password":"1234"}, 
 			function(data, textStatus) {
 				console.log(data);
 				$('#mydiv').html(data.data['password']);
-			}, "json");
+			}, "json");}, 
+			500);
 
 
 
