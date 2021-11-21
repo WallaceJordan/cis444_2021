@@ -37,7 +37,7 @@ def index():
     return redirect('/static/index.html')
 
 
-@app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
+@app.route("/secure_calls/<proc_name>",methods=['GET', 'POST'])
 @token_required
 def exec_secure_proc(proc_name):
     logger.debug(f"Secure Call to {proc_name}")
@@ -61,7 +61,7 @@ def exec_secure_proc(proc_name):
 
 
 
-@app.route("/open_api/<proc_name>",methods=['GET', 'POST'])
+@app.route("/open_calls/<proc_name>",methods=['GET', 'POST'])
 def exec_proc(proc_name):
     logger.debug(f"Call to {proc_name}")
 
