@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="/static/cis444.js"></script>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(#42f4d7, #ff6d86) no-repeat center center fixed;
+        }
+
+        p {
+            font-size: 30px;
+            font-weight: 500;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 50px;
+        }
+        div {
+            text-align: center;
+        }
+
+        #dylanintro {
+            border: 1px solid rgb(151, 151, 151);
+            text-align: center;
+        }
+        #dylansmile {
+            border: 1px solid rgb(151, 151, 151);
+            border-radius: 150px;
+            text-align: center;
+        }
+        #beachpic {
+            width: 300px;
+            height: 300px;
+            /* border-radius: 300px; */
+            text-align: center;
+            border: 2px solid #cb72aa;
+        }
+        #dylan-at-beach {
+            text-align: center;
+        }
+        #spartanpic {
+            width: 30%;
+            border: 2px solid #cb72aa;
+        }
+        .enter {
+            text-align: center;
+            --color: #a972cb;
+            --hover: #cb72aa;
+            color: var(--color);
+            transition: 0.25s;
+            background: none;
+            border: 2px solid;
+            font: inherit;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 1;
+            margin: 0.5em;
+            padding: 1em 2em;
+            cursor: pointer;
+        }
+        /* Animate the size, inside */
+        .enter:hover, .enter:focus {
+            box-shadow: inset 0 0 0 2em var(--hover);
+            border-color: var(--hover);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        function get_awesomeness() {
+            console.log("in get_awesomeness");
+	    $.ajax({
+		    url: "/open_calls/get_awesomeness",
+		    success: function (data) {
+			console.log("got awesomeness");
+                	console.log(data.awesomeness);
+                	$('#reasons').show();
+                	console.log(data.awesomeness);
+                	for (var key in data.awesomeness) {
+                    		console.log(data.awesomeness[key]);
+                    		var firstName = data.awesomeness[key][0];
+                    		var lastName = data.awesomeness[key][1];
+                    		var gender = data.awesomeness[key][2];
+                    		var dob = data.awesomeness[key][3];
+                    		var height = data.awesomeness[key][4] + 12; // accidentally listed him too short in database.
+                    		var hairColor = data.awesomeness[key][5];
+                    		var eyeColor = data.awesomeness[key][6];
+                    		const dylanStats = document.getElementById("dylan-stats");                    dylanStats.textContent = "This hunk's name is " + firstName + " " + lastName + ". He is a 26 year old " + gender + " stud who was born on " + dob + ". He is approximately " +
+                    		height + " inches tall and absolutely ripped out of his mind. He also has " + hairColor + " hair and the deepest " + eyeColor + " eyes you have ever seen. Good luck" +
+                    		" not gettin lost while looking into those eyes. ;)";
+                	}
+			},
+		    error: function (err) {console.log(err)}
+		    
+		   });
+	}
+    </script>
+    <div id="dylanintro">
+        <h1>Want to Date This Hunk?</h1>
+        <img id="dylansmile"
+            src="https://media.xogrp.com/images/d5767bc3-e4c3-4a77-987c-7ceb515aaeb7~rt_auto-cr_0.143.1071.1214-rs_150.h?ordering=explicit"
+            alt="Smiling Dylan">
+        <div id="enter-button">
+            <button class="enter" onclick="get_awesomeness()">Yes Please!</button>
+        </div>
+    </div>
+
+    <div id="reasons" style="display: none;">
+        <div id="dylan-at-beach" style="padding-top: 20px;">
+            <img id="beachpic"
+                src="https://scontent.fsan1-1.fna.fbcdn.net/v/t1.6435-9/89181514_3093799220638483_3318405609652486144_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=lJUMTS-vvfIAX8AjPtt&_nc_ht=scontent.fsan1-1.fna&oh=00_AT8vFwd9jr5HBQpc9wuQ6egwRtGnU5Dz3GvxL071ZwllkQ&oe=61DD5A19"
+                alt="Dylan on beach">
+        </div>
+        <p id="dylan-stats" style="text-align: center;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. </p>
+        <div id="dylan-spartan">
+            <img id="spartanpic"
+                src="https://spartan-web-prod.s3.amazonaws.com/races/4676/watermarked_previews/105676/Frank-+Beater/100EOS5D/0C2A7379.JPG"
+                alt="Dylan during a Spartan Race.">
+		<p>This picture of Dylan is from a Spartan Race in Big Bear, California. This particular race was one of the most difficult obstacle course races ever conceived. It was a 14 mile long race on the ski slopes of a ski resort with 5000+ feet of elevation gain, and guess what? He absolutely crushed it looking as handsome as ever!</p>
+        	<p>Some hobbies that he enjoys are: gaming, hiking, rock climbing, and welding. He is a top tier gamer that can hang with the likes of Shroudy Rowdy. He can hike with the best of them as well. He once free solo'd El Capitan with Alex Honnold and saved a baby seal on the way up. Dylan can also fabricate anything you can think of with his dope welding skillz. On top of all of this goodness, he can cook a mean meal as well. In conclusion, Dylan is the perfect man. He checks all of the boxes, so what are you waiting for? Contact him at dylanissosupercool@dylan.org</p>
+        </div>
+    </div>
+</body>
+
+</html>
